@@ -129,19 +129,19 @@ export const eliminarRed = async (req, res) => {
 //listar redes publicas
 export const listado = async (req, res) => {
     try {
-        // Obtener todos los skills sin paginación y excluyendo el campo userId
+        // Obtener todos las redes sin paginación y excluyendo el campo userId
         const redes = await Redes.find({}, "-userId").sort({ fecha: -1 });
 
         return res.status(200).json({
             status: 'success',
-            message: 'Listado de Skill',
+            message: 'Listado de redes',
             redes: redes,
             totalItems: redes.length
         });
     } catch (error) {
         return res.status(500).json({
             status: 'error',
-            message: 'Error al listar las Skill',
+            message: 'Error al listar las redes',
             error: error.message
         });
     }

@@ -15,6 +15,7 @@ import * as jwt from '../services/jwt.js';
 export const register = async (req, res) => {
     // Recoger datos de la petición
     const params = req.body;
+    console.log(params)
 
     // Comprobar datos + validación
     if (!params.name || !params.surname || !params.email || !params.password || !params.nick) {
