@@ -315,7 +315,7 @@ export const upload = async (req, res) => {
 export const listado = async (req, res) => {
     try {
         // Obtener todos los skills sin paginación y excluyendo el campo userId
-        const usuario = await User.find({}, "-userId").sort({ fecha: -1 });
+        const usuario = await User.find({}, "-userId -password").sort({ fecha: -1 });
 
         return res.status(200).json({
             status: 'success',
