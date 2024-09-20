@@ -20,7 +20,7 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'dashboard.franciscoalfaro.cl'], // permitir cualquier origen, puedes limitarlo si lo necesitas
+    origin: ['http://localhost:5173', 'https://franalfaro.ddns.net/api-portafolio', 'dashboard.franciscoalfaro.cl'], // permitir cualquier origen, puedes limitarlo si lo necesitas
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Disposition"],
     credentials: true,
@@ -32,7 +32,7 @@ const io = new Server(server, {
 
 //configurar cors
 app.use(cors({
-  origin: ['http://localhost:5173', 'dashboard.franciscoalfaro.cl'],
+  origin: ['http://localhost:5173', 'https://franalfaro.ddns.net/api-portafolio', 'dashboard.franciscoalfaro.cl'],
   exposedHeaders: ['Content-Disposition'],
   credentials: true,
 }));
