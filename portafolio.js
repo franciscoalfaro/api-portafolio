@@ -20,19 +20,19 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "*", // permitir cualquier origen, puedes limitarlo si lo necesitas
+    origin: ['http://localhost:5173', 'https://franalfaro.ddns.net'], // permitir cualquier origen, puedes limitarlo si lo necesitas
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Disposition"],
     credentials: true,
     
   },
-  path: '/api-portafolio/socket.io'
+  path: '/socket.io'
 });
 
 
 //configurar cors
 app.use(cors({
-  origin: '*',
+  origin: ['http://localhost:5173', 'https://franalfaro.ddns.net'],
   exposedHeaders: ['Content-Disposition'],
   credentials: true,
 }));
