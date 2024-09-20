@@ -20,24 +20,18 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-      origin: "*", // Permitir este origen
-      methods: ["GET", "POST"],
-      allowedHeaders: ["Content-Disposition"],
-      credentials: true
+    origin: "*", // permitir cualquier origen, puedes limitarlo si lo necesitas
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Disposition"],
+    credentials: true
   }
+  
 });
 
-// Configurar CORS
-const corsOptions = {
-  origin: "*", // Permitir este origen
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Disposition"],
-  credentials: true
-};
-
-// Usar CORS en la aplicación Express
-app.use(cors(corsOptions));
-
+//configurar cors
+app.use(cors({
+    exposedHeaders: ['Content-Disposition']
+  }));
 
 //conertir los datos del body a obj js
 app.use(express.json());
