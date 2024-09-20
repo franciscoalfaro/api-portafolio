@@ -19,6 +19,7 @@ const server = createServer(app);
 
 // configurar Socket.IO
 const io = new Server(server, {
+  path: '/api-portafolio/socket.io/',
   cors: {
     origin: "*",
     allowedHeaders: ["Content-Disposition"],
