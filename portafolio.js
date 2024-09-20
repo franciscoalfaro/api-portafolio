@@ -20,6 +20,8 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   path: '/api-portafolio/socket.io/',
+  wssEngine:['ws','wss'],
+  transports:['websocket','polling'],
   cors: {
     origin: "*",
     allowedHeaders: ["Content-Disposition"],
