@@ -26,7 +26,7 @@ const io = new Server(server, {
     credentials: true,
     
   },
-  path: '/socket.io'
+  path: '/api-portafolio/socket.io'
 });
 
 
