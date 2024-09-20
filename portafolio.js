@@ -28,7 +28,7 @@ const io = new Server(server, {
 });
 
 app.use(cors({
-    origin: ['https://dashboard.franciscoalfaro.cl', 'https://franciscoalfaro.cl/','https://www.franciscoalfaro.cl/'],  // Cambia esto a la URL de tu frontend
+    origin: '*',  // Cambia esto a la URL de tu frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,  // Para permitir que las cookies o las credenciales se envíen si es necesario
