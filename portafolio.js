@@ -20,7 +20,7 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-      origin: "https://dashboard.franciscoalfaro.cl", // Permitir este origen
+      origin: "*", // Permitir este origen
       methods: ["GET", "POST"],
       allowedHeaders: ["Content-Disposition"],
       credentials: true
@@ -29,7 +29,7 @@ const io = new Server(server, {
 
 // Configurar CORS
 const corsOptions = {
-  origin: "https://dashboard.franciscoalfaro.cl", // Permitir este origen
+  origin: "*", // Permitir este origen
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Disposition"],
   credentials: true
