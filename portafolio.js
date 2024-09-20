@@ -20,11 +20,14 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "*", // permitir cualquier origen, puedes limitarlo si lo necesitas
+    origin: "https://dashboard.franciscoalfaro.cl", // permitir cualquier origen, puedes limitarlo si lo necesitas
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Disposition"],
     credentials: true
-  }
+  },
+  path:'socket',
+  transports:['websocket', 'polling'],
+  reconnection:true
   
 });
 
