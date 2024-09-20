@@ -27,9 +27,12 @@ const io = new Server(server, {
   }
 });
 
+
 //configurar cors
 app.use(cors({
-    exposedHeaders: ['Content-Disposition']
+    origin: '*',
+    exposedHeaders: ['Content-Disposition'],
+    credentials: true,
   }));
 
 //conertir los datos del body a obj js
