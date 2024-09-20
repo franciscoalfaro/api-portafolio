@@ -26,8 +26,10 @@ const io = new Server(server, {
     credentials: true,
     
   },
-  path: '/api-portafolio/socket.io'
+  path: 'https://franalfaro.ddns.net/api-portafolio/socket.io'
 });
+
+console.log(io)
 
 
 //configurar cors
