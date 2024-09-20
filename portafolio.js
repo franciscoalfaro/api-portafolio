@@ -22,7 +22,6 @@ const io = new Server(server, {
   cors: {
     origin: "https://dashboard.franciscoalfaro.cl", // permitir cualquier origen, puedes limitarlo si lo necesitas
     methods: ["GET", "POST"],
-    wssEngine:['ws','wss'],
     allowedHeaders: ["Content-Disposition"],
     credentials: true
   },
