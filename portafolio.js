@@ -20,24 +20,24 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "*", // permitir cualquier origen, puedes limitarlo si lo necesitas
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Disposition"],
-    credentials: true
+      origin: "https://dashboard.franciscoalfaro.cl", // Permitir este origen
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Content-Disposition"],
+      credentials: true
   }
 });
 
-app.use(cors({
-    origin: '*',  // Cambia esto a la URL de tu frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,  // Para permitir que las cookies o las credenciales se envíen si es necesario
-}));
+// Configurar CORS
+const corsOptions = {
+  origin: "https://dashboard.franciscoalfaro.cl", // Permitir este origen
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Disposition"],
+  credentials: true
+};
 
-//configurar cors
-app.use(cors({
-    exposedHeaders: ['Content-Disposition']
-  }));
+// Usar CORS en la aplicación Express
+app.use(cors(corsOptions));
+
 
 //conertir los datos del body a obj js
 app.use(express.json());
