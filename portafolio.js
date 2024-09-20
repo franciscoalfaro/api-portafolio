@@ -1,11 +1,11 @@
 //importar dependencia de conexion
-import {connection} from './database/connection.js'
+import { connection } from './database/connection.js'
 import express from "express"
-import cors from  "cors"
+import cors from "cors"
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import { getSocketSpace, obtenerDatosServidor } from './controller/SpaceController.js'; 
+import { getSocketSpace, obtenerDatosServidor } from './controller/SpaceController.js';
 
 // efectuar conexion a BD
 connection();
@@ -20,24 +20,26 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // permitir cualquier origen, puedes limitarlo si lo necesitas
+    origin: "*", // permitir cualquier origen, puedes limitarlo si lo necesitas
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Disposition"],
-    credentials: true
-  }
+    credentials: true,
+    
+  },
+  path: '/api-portafolio/socket.io'
 });
 
 
 //configurar cors
 app.use(cors({
-    origin: 'http://localhost:5173',
-    exposedHeaders: ['Content-Disposition'],
-    credentials: true,
-  }));
+  origin: '*',
+  exposedHeaders: ['Content-Disposition'],
+  credentials: true,
+}));
 
 //conertir los datos del body a obj js
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
 
 //cargar rutas
@@ -58,22 +60,22 @@ app.use("/api/user", UserRoutes);
 app.use("/api/recovery", RecoveryRoutes)
 
 //espacio
-app.use("/api/space",SpaceRoutes)
+app.use("/api/space", SpaceRoutes)
 
 //stack
-app.use("/api/stack",StackRoutes)
+app.use("/api/stack", StackRoutes)
 
 //skill
-app.use("/api/skill",SkillRoutes)
+app.use("/api/skill", SkillRoutes)
 
 //proyectos
-app.use("/api/project",ProjectRoutes)
+app.use("/api/project", ProjectRoutes)
 
 //redes
-app.use("/api/redes",RedesRoutes)
+app.use("/api/redes", RedesRoutes)
 
 //contacto
-app.use("/api/contacto",ContactoRoutes)
+app.use("/api/contacto", ContactoRoutes)
 
 
 // lógica de Socket.IO
@@ -96,7 +98,7 @@ io.on('connection', (socket) => {
   // Escuchar eventos desde el cliente
   socket.on('mensaje', (data) => {
     console.log(`Mensaje recibido: ${data}`);
-    
+
     // Emitir respuesta a todos los clientes conectados
     io.emit('mensaje', data);
   });
@@ -109,6 +111,6 @@ io.on('connection', (socket) => {
 });
 
 
-server.listen(puerto, ()=> {
-    console.log("Server runing in port :" +puerto)
+server.listen(puerto, () => {
+  console.log("Server runing in port :" + puerto)
 })
