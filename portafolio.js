@@ -20,7 +20,7 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "*", // permitir cualquier origen, puedes limitarlo si lo necesitas
+    origin: "http://localhost:5173", // permitir cualquier origen, puedes limitarlo si lo necesitas
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Disposition"],
     credentials: true
@@ -30,7 +30,7 @@ const io = new Server(server, {
 
 //configurar cors
 app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:5173',
     exposedHeaders: ['Content-Disposition'],
     credentials: true,
   }));
