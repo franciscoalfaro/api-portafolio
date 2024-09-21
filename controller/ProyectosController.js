@@ -8,7 +8,6 @@ import path from 'path';
 // Controlador para crear proyectos
 export const crearProyecto = async (req, res) => {
     const params = req.body;
-    console.log(req.body)
 
     // Verificar si faltan campos requeridos
     if (!params.name_project || !params.description || !params.tecnologic || !params.type_project) {
