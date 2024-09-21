@@ -8,6 +8,7 @@ import path from 'path';
 // Controlador para crear proyectos
 export const crearProyecto = async (req, res) => {
     const params = req.body;
+    console.log(req.body)
 
     // Verificar si faltan campos requeridos
     if (!params.name_project || !params.description || !params.tecnologic || !params.type_project) {
@@ -15,6 +16,25 @@ export const crearProyecto = async (req, res) => {
             status: "Error",
             message: "Faltan datos por enviar",
         });
+    }
+
+    // Verificar si cada URL comienza con "http://" o "https://"
+    if (params.url && !/^https?:\/\//i.test(params.url)) {
+        params.url = `https://${params.url}`; // Si no comienza, agregar "https://"
+    } else {
+        params.url = params.url; // Mantener el valor original si ya es válido
+    }
+
+    if (params.repositorio && !/^https?:\/\//i.test(params.repositorio)) {
+        params.repositorio = `https://${params.repositorio}`; // Si no comienza, agregar "https://"
+    } else {
+        params.repositorio = params.repositorio; // Mantener el valor original si ya es válido
+    }
+
+    if (params.repositorioApi && !/^https?:\/\//i.test(params.repositorioApi)) {
+        params.repositorioApi = `https://${params.repositorioApi}`; // Si no comienza, agregar "https://"
+    } else {
+        params.repositorioApi = params.repositorioApi; // Mantener el valor original si ya es válido
     }
 
     try {
@@ -27,6 +47,7 @@ export const crearProyecto = async (req, res) => {
             tecnologic: params.tecnologic,
             url: params.url,
             repositorio: params.repositorio,
+            repositorioApi: params.repositorioApi,
             type_project: params.type_project,
             date_start: params.date_start ? new Date(params.date_start) : Date.now(), // Manejar la fecha
             date_end: params.date_end ? new Date(params.date_end) : null,
@@ -203,22 +224,27 @@ export const actualizarProyecto = async (req, res) => {
 // Controlador para listar proyectos del usuario// Controlador para listar proyectos del usuario
 export const listarProyecto = async (req, res) => {
     try {
-        const { page = 1, limit = 10 } = req.query;
-        const userId = req.user.id; // Filtrar por el usuario autenticado
+        let page = 1
+        if (req.params.page) {
+            page = req.params.page
+        }
+        page = parseInt(page)
 
-        const projects = await Proyecto.paginate(
-            { userId },
-            { page, limit, sort: { fecha: -1 } }
-        );
+        let itemPerPage = 3
+
+        const userId = req.user.id; 
+        const options = {page, limit:itemPerPage, sort: { create_at: -1 }}
+
+        const projects = await Proyecto.paginate({ userId },options);
 
         return res.status(200).json({
             status: 'success',
             message: 'Listado de proyectos',
-            projects: projects.docs,
-            totalPages: projects.totalPages,
-            totalItems: projects.totalDocs,
-            itemsPerPage: projects.limit,
-            currentPage: projects.page
+            projects: projects.docs,         // Lista de los skill en la página actual
+            totalPages: projects.totalPages,  // Número total de páginas
+            totalDocs: projects.totalDocs,  // Total de documentos
+            itemsPerPage: projects.limit,   // Número de skill por página
+            page: projects.page      // Página actual
         });
     } catch (error) {
         return res.status(500).json({

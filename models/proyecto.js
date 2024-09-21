@@ -30,13 +30,19 @@ const ProyectoSchema = Schema({
     repositorio: {
         type: String,
     },
+    repositorioApi: {
+        type: String,
+    },
     date_start: {
         type: Date,
     },
     date_end: {
         type: Date,
     },
-
+    create_at: {
+        type: Date,
+        default: Date.now
+    },
     images: [{
         filename: String,
     }],
