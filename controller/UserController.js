@@ -9,6 +9,7 @@ import User from '../models/user.js';
 // importar servicio
 import * as validate from '../helpers/validate.js';
 import * as jwt from '../services/jwt.js';
+import Cv from '../models/cv.js';
 
 
 // registro
@@ -135,64 +136,64 @@ export const login = async (req, res) => {
 //actualizar datos del usuario
 export const update = async (req, res) => {
     try {
-      // Recoger datos del usuario que se actualizará
-      const userIdentity = req.user;
-      let userToUpdate = req.body;
-  
-      // Eliminar campos sobrantes
-      delete userToUpdate.iat;
-      delete userToUpdate.exp;
-      delete userToUpdate.role;
-      delete userToUpdate.image;
-  
-      // Comprobar si el usuario ya existe
-      const users = await User.find({
-        $or: [{ email: userToUpdate.email.toLowerCase() }],
-      });
-  
-      if (!users) {
-        return res.status(500).send({ status: "error", message: "No existe el usuario a actualizar" });
-      }
-  
-      let userIsset = false;
-      users.forEach((user) => {
-        if (user && user._id != userIdentity.id) userIsset = true;
-      });
-  
-      if (userIsset) {
-        return res.status(200).send({
-          status: "warning",
-          message: "El usuario ya existe",
+        // Recoger datos del usuario que se actualizará
+        const userIdentity = req.user;
+        let userToUpdate = req.body;
+
+        // Eliminar campos sobrantes
+        delete userToUpdate.iat;
+        delete userToUpdate.exp;
+        delete userToUpdate.role;
+        delete userToUpdate.image;
+
+        // Comprobar si el usuario ya existe
+        const users = await User.find({
+            $or: [{ email: userToUpdate.email.toLowerCase() }],
         });
-      }
-  
-      // Si hay contraseña, cifrarla
-      if (userToUpdate.password) {
-        let pwd = await bcrypt.hash(userToUpdate.password, 10);
-        userToUpdate.password = pwd;
-      } else {
-        delete userToUpdate.password;
-      }
-  
-      // Buscar el usuario y actualizarlo
-      const userUpdate = await User.findByIdAndUpdate(userIdentity.id, userToUpdate, { new: true });
-  
-      if (!userUpdate) {
-        return res.status(400).json({ status: "error", message: "Error al actualizar" });
-      }
-  
-      return res.status(200).json({
-        status: "success",
-        message: "Profile update success",
-        user: userUpdate, // Enviar el usuario actualizado
-      });
+
+        if (!users) {
+            return res.status(500).send({ status: "error", message: "No existe el usuario a actualizar" });
+        }
+
+        let userIsset = false;
+        users.forEach((user) => {
+            if (user && user._id != userIdentity.id) userIsset = true;
+        });
+
+        if (userIsset) {
+            return res.status(200).send({
+                status: "warning",
+                message: "El usuario ya existe",
+            });
+        }
+
+        // Si hay contraseña, cifrarla
+        if (userToUpdate.password) {
+            let pwd = await bcrypt.hash(userToUpdate.password, 10);
+            userToUpdate.password = pwd;
+        } else {
+            delete userToUpdate.password;
+        }
+
+        // Buscar el usuario y actualizarlo
+        const userUpdate = await User.findByIdAndUpdate(userIdentity.id, userToUpdate, { new: true });
+
+        if (!userUpdate) {
+            return res.status(400).json({ status: "error", message: "Error al actualizar" });
+        }
+
+        return res.status(200).json({
+            status: "success",
+            message: "Profile update success",
+            user: userUpdate, // Enviar el usuario actualizado
+        });
     } catch (error) {
-      return res.status(500).send({
-        status: "error",
-        message: "Error al obtener la información en el servidor",
-      });
+        return res.status(500).send({
+            status: "error",
+            message: "Error al obtener la información en el servidor",
+        });
     }
-  };
+};
 
 // perfil
 export const profile = async (req, res) => {
@@ -224,7 +225,7 @@ export const avatar = (req, res) => {
 
     //obtener parametro de la url
     const file = req.params.file
-    
+
     //montar el path real de la image
     const filePath = "./uploads/avatars/" + file
 
@@ -251,7 +252,7 @@ export const avatar = (req, res) => {
 
 //subida de image
 export const upload = async (req, res) => {
-    
+
     //recoger el fichero de image
     if (!req.file) {
         return res.status(404).send({
@@ -330,3 +331,93 @@ export const listado = async (req, res) => {
         });
     }
 }
+
+//obtener el cv
+
+export const obtenercv = async (req, res) => {
+    try {
+        // Buscar todos los CVs en la base de datos
+        const cvs = await Cv.find().populate('userId', 'name'); // Populamos el nombre del usuario
+
+        // Verificar si se encontraron CVs
+        if (!cvs || cvs.length === 0) {
+            return res.status(404).send({
+                status: "error",
+                message: "No se encontraron CVs"
+            });
+        }
+
+        // Enviar respuesta con la lista de CVs
+        return res.status(200).send({
+            status: "success",
+            message: "CVs encontrados",
+            cvs: cvs.map(cv => ({
+                name: cv.name,
+                path: cv.path,
+                fecha: cv.fecha,
+                userName: cv.userId.name // Incluyendo el nombre del usuario
+            }))
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "Error al obtener los CVs",
+            error
+        });
+    }
+};
+
+
+//subir cv
+export const subircv = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).send({
+            status: "error",
+            message: "archivo no seleccionado"
+        });
+    }
+
+    const cv = req.file.originalname;
+    const cvSplit = cv.split(".");
+    const extension = cvSplit[1].toLowerCase();
+
+    if (extension !== "pdf") {
+        //borrar archivo y devolver respuesta en caso de que archivo no sea de extension valida.
+        const filePath = req.file.path
+        const fileDelete = fs.unlinkSync(filePath)
+
+        //devolver respuesta.        
+        return res.status(400).json({
+            status: "error",
+            mensaje: "Extension no valida"
+        })
+    }
+
+    // Construir la ruta donde se guardará el archivo
+    const uploadPath = `./uploads/cvs/cv-${Date.now()}-${req.file.originalname}`;
+
+    // Guardar información del CV en la base de datos
+    const newCv = new Cv({
+        userId: req.user.id, // Asegúrate de que tengas el ID del usuario en la solicitud
+        name: req.file.originalname,
+        path: uploadPath // Guardar la ruta del archivo
+    });
+
+    try {
+        const savedCv = await newCv.save();
+        return res.status(200).send({
+            status: "success",
+            message: "CV subido exitosamente",
+            cv: savedCv
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: "error",
+            message: "Error al guardar el CV en la base de datos",
+            error
+        });
+    }
+
+};
+
+
