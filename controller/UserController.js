@@ -1,7 +1,7 @@
 import fs from 'fs';
 import bcrypt from 'bcrypt';
-import mongoosePagination from 'mongoose-paginate-v2';
 import path from 'path';
+
 
 // importar modelo
 import User from '../models/user.js';
@@ -9,7 +9,7 @@ import User from '../models/user.js';
 // importar servicio
 import * as validate from '../helpers/validate.js';
 import * as jwt from '../services/jwt.js';
-import Cv from '../models/cv.js';
+
 
 
 // registro
@@ -331,93 +331,4 @@ export const listado = async (req, res) => {
         });
     }
 }
-
-//obtener el cv
-
-export const obtenercv = async (req, res) => {
-    try {
-        // Buscar todos los CVs en la base de datos
-        const cvs = await Cv.find().populate('userId', 'name'); // Populamos el nombre del usuario
-
-        // Verificar si se encontraron CVs
-        if (!cvs || cvs.length === 0) {
-            return res.status(404).send({
-                status: "error",
-                message: "No se encontraron CVs"
-            });
-        }
-
-        // Enviar respuesta con la lista de CVs
-        return res.status(200).send({
-            status: "success",
-            message: "CVs encontrados",
-            cvs: cvs.map(cv => ({
-                name: cv.name,
-                path: cv.path,
-                fecha: cv.fecha,
-                userName: cv.userId.name // Incluyendo el nombre del usuario
-            }))
-        });
-    } catch (error) {
-        return res.status(500).send({
-            status: "error",
-            message: "Error al obtener los CVs",
-            error
-        });
-    }
-};
-
-
-//subir cv
-export const subircv = async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send({
-            status: "error",
-            message: "archivo no seleccionado"
-        });
-    }
-
-    const cv = req.file.originalname;
-    const cvSplit = cv.split(".");
-    const extension = cvSplit[1].toLowerCase();
-
-    if (extension !== "pdf") {
-        //borrar archivo y devolver respuesta en caso de que archivo no sea de extension valida.
-        const filePath = req.file.path
-        const fileDelete = fs.unlinkSync(filePath)
-
-        //devolver respuesta.        
-        return res.status(400).json({
-            status: "error",
-            mensaje: "Extension no valida"
-        })
-    }
-
-    // Construir la ruta donde se guardará el archivo
-    const uploadPath = `./uploads/cvs/cv-${Date.now()}-${req.file.originalname}`;
-
-    // Guardar información del CV en la base de datos
-    const newCv = new Cv({
-        userId: req.user.id, // Asegúrate de que tengas el ID del usuario en la solicitud
-        name: req.file.originalname,
-        path: uploadPath // Guardar la ruta del archivo
-    });
-
-    try {
-        const savedCv = await newCv.save();
-        return res.status(200).send({
-            status: "success",
-            message: "CV subido exitosamente",
-            cv: savedCv
-        });
-    } catch (error) {
-        return res.status(500).send({
-            status: "error",
-            message: "Error al guardar el CV en la base de datos",
-            error
-        });
-    }
-
-};
-
 

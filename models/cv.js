@@ -13,8 +13,16 @@ const CvSchema = new Schema({
         required: true
     },
     path: {
-        type: String, // Ruta del archivo en el sistema de archivos
+        type: String,
         required: true
+    },
+    filepath: {
+        type: String,
+        required: true
+    },
+    mimetype: {
+        type: String,
+        required: true,
     },
     fecha: {
         type: Date,

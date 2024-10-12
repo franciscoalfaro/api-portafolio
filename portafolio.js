@@ -49,10 +49,14 @@ import SkillRoutes from "./routes/skill.js";
 import RedesRoutes from "./routes/redes.js";
 import ProjectRoutes from "./routes/proyectos.js";
 import ContactoRoutes from "./routes/contacto.js";
+import CvRoutes from "./routes/cv.js";
 
 
 // llamado a la ruta user
 app.use("/api/user", UserRoutes);
+
+// llamado a la ruta cv
+app.use("/api/cv", CvRoutes);
 
 //recovery
 app.use("/api/recovery", RecoveryRoutes)
