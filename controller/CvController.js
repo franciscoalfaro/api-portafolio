@@ -98,11 +98,10 @@ export const mostrarCV = (req, res) => {
 
     //obtener parametro de la url
     const file = req.params.file
-    console.log(req.params)
+
     //montar el path real de la image
     const filePath = "./uploads/cvs/" + file
-    console.log(filePath)
-    console.log(file)
+
 
     try {
         //comprobar si archivo existe
