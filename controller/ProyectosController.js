@@ -181,8 +181,21 @@ export const eliminarImagen = async (req, res) => {
 export const actualizarProyecto = async (req, res) => {
     try {
         const userId = req.user.id;
-        const idProyecto = req.params.id;  // Asumiendo que el id se encuentra en los parámetros
+        const idProyecto = req.params.id;
         const proyectoActualizado = req.body;
+
+        // Función para validar y agregar https:// a las URLs
+        const validarUrl = (url) => {
+            if (url && !/^https?:\/\//i.test(url)) {
+                return `https://${url}`; // Agregar "https://" si no está presente
+            }
+            return url; // Retornar el valor original si ya es válido
+        };
+
+        // Validar las URLs proporcionadas
+        req.body.url = validarUrl(req.body.url);
+        req.body.repositorio = validarUrl(req.body.repositorio);
+        req.body.repositorioApi = validarUrl(req.body.repositorioApi);
 
         // Verificar si el proyecto existe
         const proyectoExistente = await Proyecto.findById(idProyecto);
@@ -220,6 +233,7 @@ export const actualizarProyecto = async (req, res) => {
     }
 };
 
+
 // Controlador para listar proyectos del usuario// Controlador para listar proyectos del usuario
 export const listarProyecto = async (req, res) => {
     try {
@@ -231,10 +245,10 @@ export const listarProyecto = async (req, res) => {
 
         let itemPerPage = 3
 
-        const userId = req.user.id; 
-        const options = {page, limit:itemPerPage, sort: { create_at: -1 }}
+        const userId = req.user.id;
+        const options = { page, limit: itemPerPage, sort: { create_at: -1 } }
 
-        const projects = await Proyecto.paginate({ userId },options);
+        const projects = await Proyecto.paginate({ userId }, options);
 
         return res.status(200).json({
             status: 'success',
