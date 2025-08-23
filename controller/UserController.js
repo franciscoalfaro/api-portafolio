@@ -80,58 +80,43 @@ export const register = async (req, res) => {
 
 // login
 export const login = async (req, res) => {
-    let params = req.body;
+  const { email, password } = req.body ?? {};
 
-    // Validar que email y password sean cadenas
-    if (!params.email || typeof params.email !== 'string' || !params.password || typeof params.password !== 'string') {
-        return res.status(400).send({
-            status: "error_400",
-            message: "Email o contraseña no válidos"
-        });
+  if (!email || !password || typeof email !== "string" || typeof password !== "string") {
+    return res.status(400).json({
+      status: "error",
+      message: "Credenciales incorrectas"
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    const pwdMatch = user ? await bcrypt.compare(password, user.password) : false;
+
+    if (!user || !pwdMatch) {
+      return res.status(401).json({
+        status: "error",
+        message: "Credenciales incorrectas"
+      });
     }
 
-    try {
-        // Buscar usuario en la BD
-        let user = await User.findOne({ email: params.email });
+    const token = jwt.createToken(user);
+    return res.status(200).json({
+      status: "success",
+      message: "Inicio de sesión exitoso",
+      user: { id: user._id, name: user.name },
+      token
+    });
 
-        if (!user) {
-            return res.status(404).json({ status: "Not Found", message: "Usuario no registrado" });
-        }
-
-        // Comprobar password que llega por el body y con la password del usuario de la BD
-        const pwd = await bcrypt.compare(params.password, user.password);
-
-        if (!pwd) {
-            return res.status(400).send({
-                error: "error",
-                message: "No te has identificado de forma correcta."
-            });
-        }
-
-        // Si el usuario está desactivado, cambiar el estado
-        user.eliminado = false;
-        await user.save();
-
-        // Generar y devolver el token
-        const token = jwt.createToken(user);
-        return res.status(200).json({
-            status: "success",
-            message: "Te has identificado de forma correcta.",
-            user: {
-                id: user._id,
-                name: user.name,
-            },
-            token,
-        });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send({
-            status: "error",
-            message: "error al obtener el usuario en servidor"
-        });
-    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Ha ocurrido un error en el servidor"
+    });
+  }
 };
+
 
 //actualizar datos del usuario
 export const update = async (req, res) => {
