@@ -413,7 +413,7 @@ export const obtenerProyecto = async (req, res) => {
 export const listado = async (req, res) => {
     try {
         // Obtener todos los skills sin paginación y excluyendo el campo userId
-        const proyecto = await Proyecto.find({}, "-userId").sort({ fecha: -1 });
+        const proyecto = await Proyecto.find({}, "-userId").sort({ create_at: -1 });
 
         return res.status(200).json({
             status: 'success',
