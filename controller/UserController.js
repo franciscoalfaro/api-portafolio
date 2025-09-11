@@ -311,7 +311,7 @@ export const listado = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             status: 'error',
-            message: 'Error al listar las usuario',
+            message: 'Error al listar los usuario',
             error: error.message
         });
     }

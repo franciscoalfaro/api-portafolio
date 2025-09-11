@@ -5,6 +5,7 @@
   "main": "portafolio.js",
   "type": "module",
   "scripts": {
+    "security-check": "npm audit",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon portafolio.js"
   },

@@ -90,7 +90,7 @@ io.on('connection', (socket) => {
     try {
       const datosServidor = obtenerDatosServidor(); // Datos del servidor (síncrono)      
       socket.emit('estadoServidor', datosServidor); // Enviar datos al cliente
-
+      
     } catch (error) {
       console.error('Error al obtener datos del disco:', error);
     }
@@ -111,6 +111,7 @@ io.on('connection', (socket) => {
     console.log(`Usuario desconectado: ${socket.id}`);
     clearInterval(intervalo); // Limpiar intervalo cuando se desconecta
   });
+  console.log(intervalo)
 });
 
 

@@ -39,6 +39,8 @@ export const crearProyecto = async (req, res) => {
     try {
         const userId = req.user.id; // Extraer userId del token
 
+        //issue se debe de agregar un elemento al modelo de destacado true:false
+
         // Crear nuevo proyecto y asignar campos
         const newProyecto = new Proyecto({
             name_project: params.name_project,
