@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
 API REST desarrollada en **Node.js + Express** para gestionar un **portafolio profesional**, incluyendo usuarios, CV, proyectos, skills, stacks tecnológicos, redes sociales y formulario de contacto.  
-Incluye **Socket.IO** para emitir información del estado del servidor en tiempo real y está pensada para ser consumida desde **frontends React o Vue**.
+Incluye **Socket.IO** para emitir información del estado del servidor en tiempo real.
 
 ---
 
@@ -17,8 +17,8 @@ Incluye **Socket.IO** para emitir información del estado del servidor en tiempo
 - Express
 - MongoDB + Mongoose
 - Socket.IO
-- JWT (JSON Web Token)
-- Multer (uploads)
+- JWT
+- Multer
 - Cors
 - Dotenv
 
@@ -40,7 +40,7 @@ npm install
 npm run dev
 ```
 
-Servidor por defecto:
+Servidor disponible en:
 
 ```
 http://localhost:3008
@@ -53,19 +53,93 @@ http://localhost:3008
 ```env
 PORT=3008
 MONGO_URI=mongodb://localhost:27017/portafolio
-JWT_SECRET=tu_clave_secreta
+JWT_SECRET=clave_secreta
 ```
 
 ---
 
-## 🔐 Autenticación (JWT)
+## 📂 Estructura del proyecto
 
-La API utiliza **Bearer Token**.
-
-### Ejemplo Header
-```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
+src/
+├── controller/
+├── database/
+│   └── connection.js
+├── models/
+├── routes/
+├── helpers/
+├── index.js
+```
+
+---
+
+## 🔐 Autenticación
+
+Los endpoints protegidos requieren un **JWT** enviado en el header:
+
+```http
+Authorization: Bearer <token>
+```
+
+---
+
+## 📌 Endpoints API
+
+### 👤 Usuarios
+
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/user/register | Registro de usuario | ❌ |
+| POST | /api/user/login | Login de usuario | ❌ |
+| GET | /api/user/profile/:id | Obtener perfil | ✅ |
+| PUT | /api/user/update | Actualizar usuario | ✅ |
+| POST | /api/user/upload | Subir avatar | ✅ |
+| GET | /api/user/avatar/:file | Obtener avatar | ❌ |
+| GET | /api/user/listado | Listado público | ❌ |
+
+---
+
+### 📄 CV
+
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/cv/uploadcv | Subir CV | ✅ |
+| GET | /api/cv/obtenercv | Listar CV | ❌ |
+| GET | /api/cv/mostrarcv/:file | Ver CV | ❌ |
+| GET | /api/cv/download/:fileId | Descargar CV | ❌ |
+| DELETE | /api/cv/delete/:fileId | Eliminar CV | ✅ |
+
+---
+
+### 🧠 Skills
+
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/skill/create | Crear skill | ✅ |
+| PUT | /api/skill/update/:id | Actualizar skill | ✅ |
+| DELETE | /api/skill/delete/:id | Eliminar skill | ✅ |
+| GET | /api/skill/list/:page? | Listar skills | ✅ |
+| GET | /api/skill/listado | Listado público | ❌ |
+
+---
+
+### 📁 Proyectos
+
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/project/create | Crear proyecto | ✅ |
+| PUT | /api/project/update/:id | Actualizar proyecto | ✅ |
+| DELETE | /api/project/deleteproyecto/:id | Eliminar proyecto | ✅ |
+| POST | /api/project/uploads/:id | Subir imágenes | ✅ |
+| GET | /api/project/listado | Listado público | ❌ |
+
+---
+
+### ✉️ Contacto
+
+| Método | Ruta | Descripción |
+|------|------|------------|
+| POST | /api/contacto/crear | Enviar mensaje |
 
 ---
 
@@ -271,27 +345,27 @@ export default api;
 
 ---
 
+
 ## 🔌 Socket.IO
 
-```js
-import { io } from "socket.io-client";
+Conexión:
 
+```js
 const socket = io("http://localhost:3008", {
   path: "/api-portafolio/socket.io/"
 });
-
-socket.on("estadoServidor", data => {
-  console.log("Estado del servidor:", data);
-});
 ```
+
+Evento emitido:
+- estadoServidor (cada 5 segundos)
 
 ---
 
 ## 👨‍💻 Autor
 
-**Francisco Alfaro**  
+Francisco Alfaro  
 Backend Developer – MERN Stack  
-GitHub: https://github.com/franciscoalfaro
+https://github.com/franciscoalfaro
 
 ---
 
