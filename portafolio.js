@@ -4,7 +4,6 @@ import express from "express"
 import cors from  "cors"
 import { createServer } from "http";
 import { Server } from "socket.io";
-import listEndpoints from 'express-list-endpoints';
 
 import { getSocketSpace, obtenerDatosServidor } from './controller/SpaceController.js'; 
 
@@ -115,7 +114,7 @@ io.on('connection', (socket) => {
   console.log(intervalo)
 });
 
-console.log(listEndpoints(app));
+
 
 server.listen(puerto, ()=> {
     console.log("Server runing in port :" +puerto)
