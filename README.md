@@ -1,217 +1,165 @@
-#API PORTAFOLIO
+# API Portafolio 🚀
 
-![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js)
-![Express](https://img.shields.io/badge/Express-4.x-lightgrey?logo=express)
-![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-brightgreen?logo=mongodb)
-![AWS](https://img.shields.io/badge/Deployed-AWS-orange?logo=amazon-aws)
-![License](https://img.shields.io/badge/License-MIT-blue)
-==============
+API REST desarrollada en **Node.js + Express** para gestionar un **portafolio profesional**, incluyendo usuarios, CV, proyectos, skills, stacks tecnológicos, redes sociales y formulario de contacto.  
+Incluye **Socket.IO** para emitir información del estado del servidor en tiempo real.
 
-API Portafolio es un backend desarrollado en Node.js + Express usando ES Modules.
-Está diseñado para soportar un portafolio profesional dinámico, permitiendo la
-gestión de usuarios, CV, proyectos, habilidades, stacks tecnológicos, redes
-sociales, contacto y monitoreo del estado del servidor.
-Incluye Socket.IO para comunicación en tiempo real.
+---
 
---------------------------------------------------
+## 🛠 Tecnologías
 
-TECNOLOGÍAS
------------
-
-- Node.js + Express (ES Modules)
+- Node.js
+- Express
 - MongoDB + Mongoose
-- Socket.IO (tiempo real)
-- JWT para autenticación
-- Multer para subida de archivos
-- dotenv para variables de entorno
-- CORS
-- Arquitectura modular (routes / controllers)
+- Socket.IO
+- JWT
+- Multer
+- Cors
+- Dotenv
 
---------------------------------------------------
+---
 
-INSTALACIÓN Y EJECUCIÓN LOCAL
------------------------------
+## 📦 Instalación
 
-Clonar el repositorio:
-
+```bash
 git clone https://github.com/franciscoalfaro/api-portafolio.git
 cd api-portafolio
-
-Instalar dependencias:
-
 npm install
+```
 
-Crear archivo .env basado en .env.example:
+---
 
+## ▶️ Ejecución
+
+```bash
+npm run dev
+```
+
+Servidor disponible en:
+
+```
+http://localhost:3008
+```
+
+---
+
+## ⚙️ Variables de entorno (.env)
+
+```env
 PORT=3008
-MONGODB_URI=mongodb://<usuario>:<password>@host:puerto/bd
-JWT_SECRET=tu_secreto_jwt
+MONGO_URI=mongodb://localhost:27017/portafolio
+JWT_SECRET=clave_secreta
+```
 
-Ejecutar el servidor:
+---
 
-npm run dev    (modo desarrollo)
-npm start      (producción)
+## 📂 Estructura del proyecto
 
---------------------------------------------------
+```
+src/
+├── controller/
+├── database/
+│   └── connection.js
+├── models/
+├── routes/
+├── helpers/
+├── index.js
+```
 
-ESTRUCTURA DEL PROYECTO
------------------------
+---
 
-api-portafolio/
-│
-├── controllers/      Controladores por módulo
-├── routes/           Endpoints de la API
-├── database/         Conexión a MongoDB
-├── middlewares/      Auth, Multer, validaciones
-├── helpers/          Funciones auxiliares
-├── uploads/          Archivos subidos
-├── server.js         Punto de entrada
-├── .env
-├── .env.example
-└── package.json
+## 🔐 Autenticación
 
---------------------------------------------------
+Los endpoints protegidos requieren un **JWT** enviado en el header:
 
-AUTENTICACIÓN
--------------
-
-La API utiliza JWT.
-Las rutas protegidas requieren el header:
-
+```http
 Authorization: Bearer <token>
+```
 
---------------------------------------------------
+---
 
-ENDPOINTS
----------
+## 📌 Endpoints API
 
-USUARIO /api/user
------------------
-POST    /register          Registro de usuario
-POST    /login             Login
-GET     /profile/:id       Obtener perfil (JWT)
-PUT     /update             Actualizar usuario (JWT)
-POST    /upload             Subir avatar (JWT)
-GET     /avatar/:file       Obtener avatar
-GET     /listado            Listado público de usuarios
+### 👤 Usuarios
 
---------------------------------------------------
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/user/register | Registro de usuario | ❌ |
+| POST | /api/user/login | Login de usuario | ❌ |
+| GET | /api/user/profile/:id | Obtener perfil | ✅ |
+| PUT | /api/user/update | Actualizar usuario | ✅ |
+| POST | /api/user/upload | Subir avatar | ✅ |
+| GET | /api/user/avatar/:file | Obtener avatar | ❌ |
+| GET | /api/user/listado | Listado público | ❌ |
 
-CV /api/cv
-----------
-POST    /uploadcv           Subir CV (JWT)
-GET     /obtenercv          Obtener CV
-GET     /mostrarcv/:file    Mostrar CV
-GET     /download/:fileId   Descargar CV
-DELETE  /delete/:fileId     Eliminar CV (JWT)
+---
 
---------------------------------------------------
+### 📄 CV
 
-RECOVERY /api/recovery
----------------------
-POST    /newpass            Recuperar contraseña
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/cv/uploadcv | Subir CV | ✅ |
+| GET | /api/cv/obtenercv | Listar CV | ❌ |
+| GET | /api/cv/mostrarcv/:file | Ver CV | ❌ |
+| GET | /api/cv/download/:fileId | Descargar CV | ❌ |
+| DELETE | /api/cv/delete/:fileId | Eliminar CV | ✅ |
 
---------------------------------------------------
+---
 
-ESPACIO SERVIDOR /api/space
----------------------------
-GET     /disk-space         Información de disco (JWT)
+### 🧠 Skills
 
---------------------------------------------------
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/skill/create | Crear skill | ✅ |
+| PUT | /api/skill/update/:id | Actualizar skill | ✅ |
+| DELETE | /api/skill/delete/:id | Eliminar skill | ✅ |
+| GET | /api/skill/list/:page? | Listar skills | ✅ |
+| GET | /api/skill/listado | Listado público | ❌ |
 
-STACK TECNOLÓGICO /api/stack
-----------------------------
-POST    /create
-PUT     /update/:id
-DELETE  /delete/:id
-GET     /list/:page?
-GET     /listado
+---
 
---------------------------------------------------
+### 📁 Proyectos
 
-SKILLS /api/skill
------------------
-POST    /create
-PUT     /update/:id
-DELETE  /delete/:id
-GET     /list/:page?
-GET     /listado
+| Método | Ruta | Descripción | Auth |
+|------|------|------------|------|
+| POST | /api/project/create | Crear proyecto | ✅ |
+| PUT | /api/project/update/:id | Actualizar proyecto | ✅ |
+| DELETE | /api/project/deleteproyecto/:id | Eliminar proyecto | ✅ |
+| POST | /api/project/uploads/:id | Subir imágenes | ✅ |
+| GET | /api/project/listado | Listado público | ❌ |
 
---------------------------------------------------
+---
 
-PROYECTOS /api/project
-----------------------
-POST    /create              Crear proyecto
-PUT     /update/:id          Actualizar proyecto
-DELETE  /deleteproyecto/:id  Eliminar proyecto
-POST    /uploads/:id         Subir imágenes
-DELETE  /deleteimagen/:id    Eliminar imagen
-GET     /list/:page?         Listar proyectos (JWT)
-GET     /listado             Listado público
-GET     /obtenido/:id        Obtener proyecto
-GET     /media/:file         Obtener media
+### ✉️ Contacto
 
---------------------------------------------------
+| Método | Ruta | Descripción |
+|------|------|------------|
+| POST | /api/contacto/crear | Enviar mensaje |
 
-REDES SOCIALES /api/redes
--------------------------
-POST    /create
-PUT     /update/:id
-DELETE  /delete/:id
-GET     /list/:page?
-GET     /listado
+---
 
---------------------------------------------------
+## 🔌 Socket.IO
 
-CONTACTO /api/contacto
-----------------------
-POST    /crear               Enviar mensaje de contacto
+Conexión:
 
---------------------------------------------------
+```js
+const socket = io("http://localhost:3008", {
+  path: "/api-portafolio/socket.io/"
+});
+```
 
-SOCKET.IO
----------
+Evento emitido:
+- estadoServidor (cada 5 segundos)
 
-Path de conexión:
-/api-portafolio/socket.io/
+---
 
-Eventos:
-- estadoServidor  -> Emite información del servidor cada 5 segundos
-- mensaje         -> Comunicación bidireccional cliente-servidor
+## 👨‍💻 Autor
 
---------------------------------------------------
+Francisco Alfaro  
+Backend Developer – MERN Stack  
+https://github.com/franciscoalfaro
 
-DESPLIEGUE
-----------
+---
 
-Compatible con:
-- VPS + PM2
-- Docker
-- AWS EC2
-- Railway / Render
-
---------------------------------------------------
-
-ROADMAP
--------
-
-- Documentación Swagger / OpenAPI
-- Roles y permisos
-- Tests unitarios y de integración
-- Caché para endpoints públicos
-- Dashboard administrativo
-
---------------------------------------------------
-
-AUTOR
------
-
-Francisco Alfaro
-GitHub: https://github.com/franciscoalfaro
-
---------------------------------------------------
-
-LICENCIA
---------
+## 📄 Licencia
 
 MIT
