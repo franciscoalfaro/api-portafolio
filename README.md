@@ -1,5 +1,11 @@
 # API Portafolio 🚀
 
+![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js)
+![Express](https://img.shields.io/badge/Express-4.x-lightgrey?logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-brightgreen?logo=mongodb)
+![AWS](https://img.shields.io/badge/Deployed-AWS-orange?logo=amazon-aws)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 API REST desarrollada en **Node.js + Express** para gestionar un **portafolio profesional**, incluyendo usuarios, CV, proyectos, skills, stacks tecnológicos, redes sociales y formulario de contacto.  
 Incluye **Socket.IO** para emitir información del estado del servidor en tiempo real.
 
