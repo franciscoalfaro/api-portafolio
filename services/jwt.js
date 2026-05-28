@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // importar dependencias
-import jwt from "jwt-simple";
-import moment from 'moment';
+import jwt from "jsonwebtoken";
 
 // clave secreta
 const secret_key = process.env.SECRET_KEY;
@@ -18,11 +17,9 @@ export const createToken = (user) => {
         role: user.role,
         image: user.image,
         organizacion:user.organizacion,
-        iat: moment().unix(),
-        exp: moment().add(30, "days").unix()
     };
     // devolver jwt token
-    return jwt.encode(payload, secret_key);
+    return jwt.sign(payload, secret_key, { expiresIn: '30d' });
 };
 
 export { secret_key };

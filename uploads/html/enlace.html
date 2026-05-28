@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solicitud de Contacto | Francisco Alfaro</title>
+  <title>Recuperación de Contraseña | Francisco Alfaro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -95,36 +95,52 @@
       margin: 0 0 16px;
     }
 
-    .field-label {
-      font-family: 'JetBrains Mono', monospace;
-      color: #7c00b3;
-      font-size: 13px;
-    }
-
-    .field-value {
-      font-family: 'JetBrains Mono', monospace;
-      color: #1a1a1a;
-      background-color: #e8e8e2;
-      padding: 3px 10px;
-      border-radius: 4px;
-      font-size: 13px;
-      display: inline-block;
-      margin-left: 4px;
-    }
-
-    .thank-you {
+    .btn {
+      display: block;
+      width: fit-content;
+      margin: 24px auto;
+      padding: 14px 36px;
+      background-color: #7c00b3;
+      color: #ffffff;
       font-family: 'JetBrains Mono', monospace;
       font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #5e008a;
+    }
+
+    .cmd-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #8a8a8a;
+      margin-bottom: 8px;
+    }
+
+    .cmd-prompt {
       color: #7c00b3;
-      margin-top: 24px;
-      text-align: center;
-      font-weight: 500;
     }
 
     .divider {
       border: none;
       border-top: 1px solid #d0d0c8;
       margin: 24px 0;
+    }
+
+    .warning {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #8a8a8a;
+      text-align: center;
+      padding: 12px 16px;
+      background: #f5f5f0;
+      border: 1px solid #d0d0c8;
+      border-radius: 8px;
+      margin: 16px 0;
     }
 
     .footer {
@@ -149,22 +165,12 @@
       margin: 4px 0;
     }
 
-    .cmd-line {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: #8a8a8a;
-      margin-bottom: 8px;
-    }
-
-    .cmd-prompt {
-      color: #7c00b3;
-    }
-
     @media (max-width: 600px) {
       .container { margin: 16px auto; }
       .content { padding: 20px; font-size: 14px; }
       .header h1 { font-size: 20px; }
       .header { padding: 24px 16px; }
+      .btn { width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -175,31 +181,34 @@
       <span class="terminal-dot terminal-dot-red"></span>
       <span class="terminal-dot terminal-dot-yellow"></span>
       <span class="terminal-dot terminal-dot-green"></span>
-      <span class="terminal-title">contacto@franciscoalfaro.cl</span>
+      <span class="terminal-title">recuperacion@franciscoalfaro.cl</span>
     </div>
 
     <div class="header">
-      <p class="header-prompt">$ ./recibido.sh</p>
-      <h1>Solicitud de Contacto</h1>
-      <p>He recibido tu mensaje en franciscoalfaro.cl</p>
+      <p class="header-prompt">$ ./reset-password.sh</p>
+      <h1>Recuperación de Contraseña</h1>
+      <p>Has solicitado restablecer tu contraseña en franciscoalfaro.cl</p>
     </div>
 
     <div class="content">
-      <p class="cmd-line"><span class="cmd-prompt">$</span> echo "Hola {{nombre}} {{apellido}}"</p>
-      <p>Hola <strong>{{nombre}} {{apellido}}</strong>,</p>
-      <p>Gracias por ponerte en contacto conmigo. Esta es una copia de tu solicitud. He recibido tu mensaje y te responderé en breve.</p>
+      <p class="cmd-line"><span class="cmd-prompt">$</span> echo "Hola"</p>
+      <p>Hola,</p>
+      <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Para continuar, haz clic en el siguiente botón:</p>
 
-      <hr class="divider">
+      <a href="${urlconvertida}" class="btn">Restablecer Contraseña</a>
 
-      <p><span class="field-label">> teléfono</span> <span class="field-value">{{telefono}}</span></p>
-      <p><span class="field-label">> mensaje</span></p>
-      <p style="background: #e8e8e2; border: 1px solid #d0d0c8; border-radius: 8px; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #1a1a1a; line-height: 1.6;">
-        {{mensaje}}
+      <p style="text-align: center; font-size: 13px; color: #8a8a8a;">
+        O copia y pega este enlace en tu navegador:<br>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; word-break: break-all; color: #7c00b3;">${urlconvertida}</span>
       </p>
 
       <hr class="divider">
 
-      <p class="thank-you">¡Gracias por confiar en mí!</p>
+      <p>Si no solicitaste este cambio, puedes ignorar este correo. Tu contraseña actual seguirá siendo válida.</p>
+
+      <div class="warning">
+        ⚠ Este enlace expirará en 1 hora por razones de seguridad.
+      </div>
     </div>
 
     <div class="footer">
