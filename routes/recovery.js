@@ -5,7 +5,7 @@ const router = express.Router()
 
 
 router.post("/request-reset", RecoveryController.requestPasswordReset)
-router.post("/reset-password", RecoveryController.resetPasswordWithToken)
+router.post("/reset-password/:token", RecoveryController.resetPasswordWithToken)
 
 //exportar router
 export default router;

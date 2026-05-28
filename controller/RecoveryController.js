@@ -40,7 +40,7 @@ export const requestPasswordReset = async (req, res) => {
     try {
         const resetToken = await generateResetToken(email);
 
-        const resetURL = `http://${process.env.FRONTEND_URL}api/user/reset-password?token=${resetToken}`;
+        const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
         await enviar.enviarEnlaceRecuperacion(email, resetURL);
 
