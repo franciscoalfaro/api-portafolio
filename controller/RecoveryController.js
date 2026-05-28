@@ -40,7 +40,7 @@ export const requestPasswordReset = async (req, res) => {
     try {
         const resetToken = await generateResetToken(email);
 
-        const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        const resetURL = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
         await enviar.enviarEnlaceRecuperacion(email, resetURL);
 
@@ -51,7 +51,12 @@ export const requestPasswordReset = async (req, res) => {
 };
 
 export const resetPasswordWithToken = async (req, res) => {
-    const { token, newPassword } = req.body;
+    const token = req.query.token;
+    const { newPassword } = req.body;
+
+    if (!token || !newPassword) {
+        return res.status(400).json({ message: 'Token y nueva contraseña son requeridos' });
+    }
 
     try {
         await resetPassword(token, newPassword);
