@@ -51,7 +51,7 @@ export const requestPasswordReset = async (req, res) => {
 };
 
 export const resetPasswordWithToken = async (req, res) => {
-    const token = req.query.token;
+    const token = req.params.token;
     const { newPassword } = req.body;
 
     if (!token || !newPassword) {
