@@ -1,11 +1,11 @@
 //importar dependencia de conexion
-import {connection} from './database/connection.js'
+import { connection } from './database/connection.js'
 import express from "express"
-import cors from  "cors"
+import cors from "cors"
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import { getSocketSpace, obtenerDatosServidor } from './controller/SpaceController.js'; 
+import { getSocketSpace, obtenerDatosServidor } from './controller/SpaceController.js';
 
 // efectuar conexion a BD
 connection();
@@ -20,24 +20,33 @@ const server = createServer(app);
 // configurar Socket.IO
 const io = new Server(server, {
   path: '/api-portafolio/socket.io/',
-  wssEngine:['ws','wss'],
-  transports:['websocket','polling'],
+  wssEngine: ['ws', 'wss'],
+  transports: ['websocket', 'polling'],
   cors: {
     origin: "*",
     allowedHeaders: ["Content-Disposition"],
     credentials: true
   }
-  
+
 });
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://dashboard.franciscoalfaro.cl',
+  'https://franciscoalfaro.cl',
+
+];
+
 
 //configurar cors
 app.use(cors({
-    exposedHeaders: ['Content-Disposition']
-  }));
+  exposedHeaders: ['Content-Disposition'],
+    origin: allowedOrigins
+}));
 
 //conertir los datos del body a obj js
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
 
 //cargar rutas
@@ -62,22 +71,22 @@ app.use("/api/cv", CvRoutes);
 app.use("/api/recovery", RecoveryRoutes)
 
 //espacio
-app.use("/api/space",SpaceRoutes)
+app.use("/api/space", SpaceRoutes)
 
 //stack
-app.use("/api/stack",StackRoutes)
+app.use("/api/stack", StackRoutes)
 
 //skill
-app.use("/api/skill",SkillRoutes)
+app.use("/api/skill", SkillRoutes)
 
 //proyectos
-app.use("/api/project",ProjectRoutes)
+app.use("/api/project", ProjectRoutes)
 
 //redes
-app.use("/api/redes",RedesRoutes)
+app.use("/api/redes", RedesRoutes)
 
 //contacto
-app.use("/api/contacto",ContactoRoutes)
+app.use("/api/contacto", ContactoRoutes)
 
 
 
@@ -90,7 +99,7 @@ io.on('connection', (socket) => {
     try {
       const datosServidor = obtenerDatosServidor(); // Datos del servidor (síncrono)      
       socket.emit('estadoServidor', datosServidor); // Enviar datos al cliente
-      
+
     } catch (error) {
       console.error('Error al obtener datos del disco:', error);
     }
@@ -101,7 +110,7 @@ io.on('connection', (socket) => {
   // Escuchar eventos desde el cliente
   socket.on('mensaje', (data) => {
     console.log(`Mensaje recibido: ${data}`);
-    
+
     // Emitir respuesta a todos los clientes conectados
     io.emit('mensaje', data);
   });
@@ -116,6 +125,6 @@ io.on('connection', (socket) => {
 
 
 
-server.listen(puerto, ()=> {
-    console.log("Server runing in port :" +puerto)
+server.listen(puerto, () => {
+  console.log("Server runing in port :" + puerto)
 })
