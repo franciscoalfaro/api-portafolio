@@ -34,7 +34,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'https://dashboard.franciscoalfaro.cl',
   'https://franciscoalfaro.cl',
-
+  'https://www.franciscoalfaro.cl',
 ];
 
 
