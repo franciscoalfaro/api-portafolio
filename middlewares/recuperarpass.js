@@ -19,25 +19,48 @@ function crearTransporter() {
 }
 
 // Función para enviar correo de contacto utilizando servidor SMTP
-async function enviarCorreoContacto(email, apellido,telefono,mensaje,nombre) {
+async function enviarCorreoContacto(email, apellido, telefono, mensaje, nombre) {
     const transporter = crearTransporter();
     const emailUser = process.env.EMAIL_USER;
 
+    const emailTemplatePathUsuario = path.join('uploads', 'html', 'contacto.html');
+    const emailTemplatePathAdmin = path.join('uploads', 'html', 'contacto-admin.html');
 
-    const emailTemplatePath = path.join('uploads', 'html', 'contacto.html');
-    const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+    const emailTemplateUsuario = fs.readFileSync(emailTemplatePathUsuario, 'utf8');
+    const emailTemplateAdmin = fs.readFileSync(emailTemplatePathAdmin, 'utf8');
 
-    const mailOptions = {
-        from: emailUser, // Cambia con tu dirección de correo de tu servidor
-        cc:emailUser,
+    const htmlReemplazadoUsuario = emailTemplateUsuario
+        .replace(/{{nombre}}/g, nombre)
+        .replace(/{{apellido}}/g, apellido)
+        .replace(/{{telefono}}/g, telefono)
+        .replace(/{{email}}/g, email)
+        .replace(/{{mensaje}}/g, mensaje);
+
+    const htmlReemplazadoAdmin = emailTemplateAdmin
+        .replace(/{{nombre}}/g, nombre)
+        .replace(/{{apellido}}/g, apellido)
+        .replace(/{{telefono}}/g, telefono)
+        .replace(/{{email}}/g, email)
+        .replace(/{{mensaje}}/g, mensaje);
+
+    // Correo al usuario
+    const mailOptionsUsuario = {
+        from: emailUser,
         to: email,
         subject: 'Solicitud de contacto',
-        html: emailTemplate.replace('{{nombre}}', nombre).replace('{{apellido}}', apellido).replace('{{telefono}}', telefono).replace('{{mensaje}}', mensaje)
-
+        html: htmlReemplazadoUsuario
     };
 
+    // Correo al administrador
+    const mailOptionsAdmin = {
+        from: emailUser,
+        to: emailUser,
+        subject: `Nueva solicitud de contacto de ${nombre} ${apellido}`,
+        html: htmlReemplazadoAdmin
+    };
 
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptionsUsuario);
+    await transporter.sendMail(mailOptionsAdmin);
 }
 
 
@@ -59,4 +82,4 @@ async function enviarEnlaceRecuperacion(email, urlconvertida) {
     await transporter.sendMail(mailOptions);
 }
 
-export default{ enviarCorreoContacto, enviarEnlaceRecuperacion };
+export default { enviarCorreoContacto, enviarEnlaceRecuperacion };
